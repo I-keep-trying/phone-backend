@@ -7,10 +7,15 @@ const mongoose = require("mongoose");
 
 mongoose.set("useFindAndModify", false);
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const password = process.env.MONGO_PW;
+
+mongoose.connect(
+  `mongodb+srv://fullstack2020:${password}@cluster0-lw40o.mongodb.net/phonebook-app?retryWrites=true&w=majority`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const personSchema = new mongoose.Schema({
   name: String,
