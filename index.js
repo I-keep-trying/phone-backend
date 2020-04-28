@@ -5,10 +5,6 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static("build"));
-
 mongoose.set("useFindAndModify", false);
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -30,6 +26,10 @@ personSchema.set("toJSON", {
 });
 
 const Person = mongoose.model("Person", personSchema);
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static("build"));
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -57,7 +57,7 @@ app.use(
   )
 );
 
-let persons = [
+/* let persons = [
   {
     name: "Arto Hellas",
     number: "040-123456",
@@ -78,7 +78,7 @@ let persons = [
     number: "39-23-6423122",
     id: 4,
   },
-];
+]; */
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
@@ -93,7 +93,7 @@ app.get("/", (req, res) => {
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
-    res.json(persons);
+    res.json(persons.map((person) => person.toJSON()));
   });
 });
 
