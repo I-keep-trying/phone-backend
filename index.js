@@ -55,7 +55,7 @@ app.use(
   )
 );
 
-let people = [
+let persons = [
   {
     name: "Arto Hellas",
     number: "040-123456",
@@ -84,23 +84,23 @@ app.get("/", (req, res) => {
 
 /* app.get("/api/info", (req, res) => {
   res.send(`
-  <h3>There are ${people.length} people in the phonebook. </h3>
+  <h3>There are ${persons.length} persons in the phonebook. </h3>
   <div>${new Date()} </div>
   `);
 }); */
 
-/* app.get("/api/people", (request, response) => {
-  People.find({}).then((people) => {
-    response.json(people.map((person) => person.toJSON()));
+/* app.get("/api/persons", (request, response) => {
+  People.find({}).then((persons) => {
+    response.json(persons.map((person) => person.toJSON()));
   });
 }); */
-app.get("/api/people", (req, res) => {
-  res.json(people);
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
 });
 
-app.get("/api/people/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
-  const person = people.find((person) => person.id === id);
+  const person = persons.find((person) => person.id === id);
   if (person) {
     res.json(person);
   } else {
@@ -108,14 +108,14 @@ app.get("/api/people/:id", (req, res) => {
   }
 });
 
-app.delete("/api/people/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
-  people = people.filter((person) => person.id !== id);
+  persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
 });
 
-app.post("/api/people", (request, response) => {
+app.post("/api/persons", (request, response) => {
   const body = request.body;
 
   if (!body.name) {
@@ -130,7 +130,7 @@ app.post("/api/people", (request, response) => {
     });
   }
 
-  const personMatch = people.find((person) => person.name === body.name);
+  const personMatch = persons.find((person) => person.name === body.name);
 
   if (personMatch) {
     return response.status(400).json({
@@ -144,7 +144,7 @@ app.post("/api/people", (request, response) => {
     id: Math.floor(Math.random() * 100),
   };
 
-  people = people.concat(person);
+  persons = persons.concat(person);
   response.json(person);
 });
 
