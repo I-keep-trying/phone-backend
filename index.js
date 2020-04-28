@@ -5,7 +5,9 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-/* mongoose.connect(process.env.MONGODB_URI, {
+mongoose.set("useFindAndModify", false);
+
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -23,7 +25,7 @@ personSchema.set("toJSON", {
   },
 });
 
-const People = mongoose.model("People", personSchema); */
+const Person = mongoose.model("Person", personSchema);
 
 app.use(cors());
 app.use(express.json());
@@ -89,30 +91,36 @@ app.get("/", (req, res) => {
   `);
 }); */
 
-/* app.get("/api/persons", (request, response) => {
-  People.find({}).then((persons) => {
-    response.json(persons.map((person) => person.toJSON()));
-  });
-}); */
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person.toJSON());
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send({ error: "malformatted id" });
+    });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(400).send({ error: "something went wrong" });
+    });
 });
 
 app.post("/api/persons", (request, response) => {
@@ -130,22 +138,27 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const personMatch = persons.find((person) => person.name === body.name);
+  /*   Person.findByName(request.params.name).then(person => {
+      if (person) {
+          response
+      }
+  });
 
   if (personMatch) {
     return response.status(400).json({
       error: "name must be unique",
     });
-  }
+  } */
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: Math.floor(Math.random() * 100),
-  };
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedPerson) => {
+    console.log("request.params", request.params);
+    response.json(savedPerson.toJSON());
+  });
 });
 
 const unknownEndpoint = (request, response) => {
@@ -154,6 +167,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const port = process.env.PORT || 3001;
-app.listen(port);
-console.log(`Server running on port ${process.env.PORT}; ${port}`);
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
