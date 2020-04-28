@@ -5,6 +5,10 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+app.use(cors());
+app.use(express.json());
+app.use(express.static("build"));
+
 mongoose.set("useFindAndModify", false);
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -26,10 +30,6 @@ personSchema.set("toJSON", {
 });
 
 const Person = mongoose.model("Person", personSchema);
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static("build"));
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
