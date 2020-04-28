@@ -9,13 +9,15 @@ mongoose.set("useFindAndModify", false);
 
 const password = process.env.MONGO_PW;
 
-mongoose.connect(
-  `mongodb+srv://fullstack2020:${password}@cluster0-lw40o.mongodb.net/phonebook-app?retryWrites=true&w=majority`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose
+  .connect(
+    `mongodb+srv://fullstack2020:${password}@cluster0-lw40o.mongodb.net/phonebook-app?retryWrites=true&w=majority`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .catch((error) => console.log(error));
 
 const personSchema = new mongoose.Schema({
   name: String,
