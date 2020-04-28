@@ -7,16 +7,17 @@ GET http://localhost:3003/api/people HTTP/1.1
 GET http://localhost:3003/api/info HTTP/1.1
 
 ###
-GET http://localhost:3002/api/people/5 HTTP/1.1
+GET http://localhost:3003/api/people/4 HTTP/1.1
 
 ###
-DELETE http://localhost:3002/api/people/1 HTTP/1.1
+DELETE http://localhost:3003/api/people/1 HTTP/1.1
 
 ###
 
-POST http://localhost:3002/api/people HTTP/1.1
+POST http://localhost:3003/api/people HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Joes Hellas"
+    "name": "Joes Hellas",
+    "number": "123"
 }

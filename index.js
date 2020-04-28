@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGODB_URI, {
+/* mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -23,7 +23,7 @@ personSchema.set("toJSON", {
   },
 });
 
-const People = mongoose.model("People", personSchema);
+const People = mongoose.model("People", personSchema); */
 
 app.use(cors());
 app.use(express.json());
@@ -89,14 +89,14 @@ app.get("/", (req, res) => {
   `);
 }); */
 
-app.get("/api/people", (request, response) => {
+/* app.get("/api/people", (request, response) => {
   People.find({}).then((people) => {
     response.json(people.map((person) => person.toJSON()));
   });
-});
-/* app.get("/api/people", (req, res) => {
-  res.json(people);
 }); */
+app.get("/api/people", (req, res) => {
+  res.json(people);
+});
 
 app.get("/api/people/:id", (req, res) => {
   const id = Number(req.params.id);
