@@ -70,12 +70,14 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
 });
 
-/* app.get("/api/info", (req, res) => {
-  res.send(`
-  <h3>There are ${persons.length} persons in the phonebook. </h3>
+app.get("/api/info", (req, res) => {
+  Person.find({}).then((persons) => {
+    res.send(`
+  <h3>There are ${persons.length} people in the phonebook. </h3>
   <div>${new Date()} </div>
   `);
-}); */
+  });
+});
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
