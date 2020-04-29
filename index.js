@@ -41,7 +41,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
 
-const requestLogger = (request, response, next) => {
+/* const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
   console.log("Body:  ", request.body);
@@ -49,7 +49,7 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-app.use(requestLogger);
+app.use(requestLogger); */
 
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
@@ -59,7 +59,6 @@ app.use(
   morgan(
     ":method :url :status :res[content-length] - :response-time ms :body ",
     {
-      stream: requestLogger.successLogStream,
       skip: function (req, res) {
         return req.method !== "POST";
       },
@@ -125,28 +124,31 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  /*   const personMatch =  Person.find({
-      "name": person.name
-  });
-
-  if (personMatch) {
-    console.log(person);
-  } */
-
   const person = new Person({
     name: body.name,
     number: body.number,
   });
-  const personMatch = Person.findByIdAndUpdate(request.params.id, person, {
+
+  person.save().then((savedPerson) => {
+    response.json(savedPerson.toJSON());
+  });
+});
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
     number: body.number,
-  })
-    .then((updated) => {
-      response.json(updated.toJSON());
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      console.log("request.params", request.params);
+      console.log("updatedPerson", updatedPerson);
+      response.json(updatedPerson.toJSON());
     })
-    .catch((error) => console.log(error));
-  if (personMatch) {
-    return console.log("personMatch", personMatch);
-  }
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
