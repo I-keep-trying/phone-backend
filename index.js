@@ -8,16 +8,19 @@ const mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);
 
 const password = process.env.MONGO_PW;
+const url = process.env.MONGODB_URI;
 
 mongoose
-  .connect(
-    `mongodb+srv://fullstack2020:${password}@cluster0-lw40o.mongodb.net/phonebook-app?retryWrites=true&w=majority`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .catch((error) => console.log(error));
+  .connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((result) => {
+    console.log("connected to mongodb");
+  })
+  .catch((error) => {
+    console.log("error connecting to mongodb", error.message);
+  });
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -63,29 +66,6 @@ app.use(
     }
   )
 );
-
-/* let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
-  },
-]; */
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
@@ -145,27 +125,28 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  /*   Person.findByName(request.params.name).then(person => {
-      if (person) {
-          response
-      }
+  /*   const personMatch =  Person.find({
+      "name": person.name
   });
 
   if (personMatch) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
+    console.log(person);
   } */
 
   const person = new Person({
     name: body.name,
     number: body.number,
   });
-
-  person.save().then((savedPerson) => {
-    console.log("request.params", request.params);
-    response.json(savedPerson.toJSON());
-  });
+  const personMatch = Person.findByIdAndUpdate(request.params.id, person, {
+    number: body.number,
+  })
+    .then((updated) => {
+      response.json(updated.toJSON());
+    })
+    .catch((error) => console.log(error));
+  if (personMatch) {
+    return console.log("personMatch", personMatch);
+  }
 });
 
 const unknownEndpoint = (request, response) => {
