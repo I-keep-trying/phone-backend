@@ -7,19 +7,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect index.js",
-    "dev": "nodemon --inspect index.js",
+    "start": "cross-env NODE_ENV=production node --inspect index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --inspect index.js",
     "build:ui": "rm -rf build && cd ../fullstack2020-phone-frontend && npm run build && cp -r build ../phone-backend",
     "deploy": "git push heroku master",
-    "deploy:backend": "git add . && git commit -m uibuild && git push && git push heroku master",
+    "deploy:backend": "git add . && git commit -m backend-build && git push && git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.10",
@@ -27,6 +28,11 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "jest": "^25.5.3",
+    "nodemon": "^2.0.3",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

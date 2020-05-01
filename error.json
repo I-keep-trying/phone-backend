@@ -1,7 +1,0 @@
-{ validator: [Function],
-    message:
-     'Path `number` (`5555555`) is shorter than the minimum allowed length (8).',
-    type: 'minlength',
-    minlength: 8,
-    path: 'number',
-    value: '5555555' }
