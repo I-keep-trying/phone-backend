@@ -14,6 +14,10 @@ const personSchema = new mongoose.Schema({
     type: String,
     minlength: 8,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 })
 
 personSchema

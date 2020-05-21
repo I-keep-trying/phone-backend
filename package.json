@@ -5,7 +5,7 @@
     "node": "10.16.2"
   },
   "description": "",
-  "main": "index.js",
+  "main": "phonebook_api.test.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node --inspect index.js",
     "dev": "cross-env NODE_ENV=development nodemon --inspect index.js",
@@ -14,15 +14,17 @@
     "deploy:backend": "git add . && git commit -m backend-build && git push && git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^5.9.10",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
